@@ -4,13 +4,15 @@ import json
 import pandas as pd
 import sys
 import warnings
+from datetime import date
 warnings.filterwarnings('ignore')
 
 try:
-
+    
     # take in command line arguments
     city = sys.argv[1]
     state = sys.argv[2]
+    current_date = date.today().strftime('%Y-%m-%d')
 
     # input checking and modification
     if city == '': 
@@ -83,12 +85,12 @@ try:
 
     # select certain fields and output (this portion can be changed)
     data = df[['zpid', 'imgSrc', 'statusType', 'price', 'unformattedPrice', 'zestimate', 'best_deal', 'address', 'addressZipcode', 'beds', 'baths', 'area', 'variableData', 'brokerName', 'builderName']]
-    data.to_csv("./data/" + city + "_Homes_ForSale.csv")
+    data.to_csv("./data/" + city + "_Homes_ForSale_"+current_date+".csv")
 
     data2 = df2[['zpid', 'imgSrc', 'statusType', 'price', 'unformattedPrice', 'zestimate', 'best_deal', 'address', 'addressZipcode', 'beds', 'baths', 'area', 'variableData']]
-    data2.to_csv("./data/" + city + "_Apartments_ForRental.csv")
+    data2.to_csv("./data/" + city + "_Apartments_ForRental_"+current_date+".csv")
 
-    print('Done.\n'+city+"_Homes_ForSale.csv is available for viewing.\n"+city+"_Apartments_ForRental.csv is available for viewing.")
+    print('Done.\n'+city+"_Homes_ForSale_"+current_date+".csv is available for viewing.\n"+city+"_Apartments_ForRental_"+current_date+".csv is available for viewing.")
 
 except:
     print("Error: The City or State entered could not be found.")
