@@ -28,6 +28,10 @@ city = city.capitalize()
 city_state = city + ", " + state
 
 # authenticate your requests with your Yelp API key
+
+#you'll have to obtain a Yelp Fusion API key and put it in a credentials.json file, or alternately uncomment below code
+#yelp_api = YelpAPI(<your_api_key_here>)
+
 with open('credentials.json') as f:
     credentials = json.load(f)
 
@@ -36,7 +40,7 @@ api_key = credentials['yelp']
 yelp_api = YelpAPI(api_key)
 
 # make API call to search for businesses
-offsets = [0, 50, 100, 150, 200, 250]
+offsets = [0, 50, 100, 150, 200, 250, 300, 350, 400, 450]
 dfs = []
 for offset in offsets:
     raw_data = yelp_api.search_query(term='restaurants', location=city_state, offset=offset, limit=50)
@@ -47,13 +51,40 @@ for offset in offsets:
 combined_df = pd.concat(dfs)
 
 # Reset the index, since it will have duplicate values
-combined_df = combined_df.reset_index(drop=True)
+df = combined_df.reset_index(drop=True)
+df.to_csv("./data/" + city + "_Restaurants_"+current_date+".csv")
 
 ######################################################
 # data cleaning and conversion
+#fix address
+df = pd.read_csv("./data/"+city+"_Restaurants_"+current_date+".csv")
+df['location'] = df['location'].str.replace("'", "\"")
+df['location'] = df['location'].str.replace("None", "null")
 
+location_dict = []
 
+# iterate through 'location' column and load the JSON data
+for location in df['location']:
+    loc = json.loads(location)
+    location_dict.append(loc)
+
+location_df = pd.DataFrame.from_dict(location_dict, orient='columns')
+df = pd.merge(df, location_df, left_index=True, right_index=True)
+
+#fix coordinates
+df['coordinates'] = df['coordinates'].str.replace("'", "\"")
+df['coordinates'] = df['coordinates'].str.replace("None", "null")
+
+coordinates_dict = []
+
+# iterate through 'location' column and load the JSON data
+for coordinate in df['coordinates']:
+    coord = json.loads(coordinate)
+    coordinates_dict.append(coord)
+
+coordinates_df = pd.DataFrame.from_dict(coordinates_dict, orient='columns')
+df = pd.merge(df, coordinates_df, left_index=True, right_index=True)
 
 ######################################################
 
-combined_df.to_csv("./data/" + city + "_Restaurants_"+current_date+".csv")
+df.to_csv("./data/" + city + "_Restaurants_"+current_date+".csv")
