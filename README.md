@@ -9,6 +9,6 @@ As of now, the following are in this repository:
 **yelp_data_scrape.py**: This is a python script to scrape restaurant data from the web. Simply download the script then run it from the command line using the python command (make sure you have the latest python kernel installed). It uses the Yelp Fusion API to make 6 api calls and collect 300 rows of data (NOTE: you'll need to obtain your own api key from yelp.com/developers). The script will request from the user a city and state to pull from, then will populate a csv file for data analysis. This file contains many fields of data, including location, ratings, transactions, phone, and pricing.
 
 **NFL_gamelog_scrape.py**: This is a python script to scrape game log data from pro-football-reference.com for a given team and season. The data is output to a csv file. A team and a season parameter will need to be provided. If not, then all teams and the current season are used by default.
-- syntax: python3 NFL_gamelog_scrape.py <team> <season>
+- syntax: python3 NFL_gamelog_scrape.py /<team/> /<season/>
 
 Stay tuned for more!
